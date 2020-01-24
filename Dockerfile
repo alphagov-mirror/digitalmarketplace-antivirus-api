@@ -1,6 +1,12 @@
+FROM maven as builder
+WORKDIR /build
+RUN git clone https://github.com/veraPDF/veraPDF-rest.git
+RUN cd veraPDF-rest && git checkout 3fdb3f230ba148a2045cd3da691b18831691e8f6 && mvn clean package
+
 FROM digitalmarketplace/base-api:8.0.0
 
 ENV CLAMAV_VERSION 0.
+ENV VERAPDF_REST_VERSION=0.1.0-SNAPSHOT
 
 RUN echo "deb http://http.debian.net/debian/ buster main contrib non-free" > /etc/apt/sources.list && \
     echo "deb http://http.debian.net/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list && \
@@ -11,9 +17,12 @@ RUN echo "deb http://http.debian.net/debian/ buster main contrib non-free" > /et
         clamav-daemon=${CLAMAV_VERSION}* \
         clamav-freshclam=${CLAMAV_VERSION}* \
         libclamunrar9 \
+        openjdk-11-jre-headless \
         wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build/veraPDF-rest/target/verapdf-rest-${VERAPDF_REST_VERSION}.jar /opt/verapdf-rest/
 
 RUN wget -O /var/lib/clamav/main.cvd http://database.clamav.net/main.cvd && \
     wget -O /var/lib/clamav/daily.cvd http://database.clamav.net/daily.cvd && \
