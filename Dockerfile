@@ -8,6 +8,9 @@ FROM digitalmarketplace/base-api:8.0.0
 ENV CLAMAV_VERSION 0.
 ENV VERAPDF_REST_VERSION=0.1.0-SNAPSHOT
 
+# see debian bug #863199 regarding installing openjdk in docker
+RUN mkdir -p /usr/share/man/man1
+
 RUN echo "deb http://http.debian.net/debian/ buster main contrib non-free" > /etc/apt/sources.list && \
     echo "deb http://http.debian.net/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list && \
     echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list && \
