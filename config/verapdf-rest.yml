@@ -1,0 +1,15 @@
+server:
+  shutdownGracePeriod: 9 seconds
+  maxQueuedRequests: 16
+  applicationConnectors:
+  - type: http 
+    port: 6060
+  adminConnectors:
+  - type: http
+    port: 6061
+  requestLog:
+    type: classic
+    timeZone: UTC
+    appenders:
+      - type: console
+        target: stderr

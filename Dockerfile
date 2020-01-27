@@ -25,7 +25,7 @@ RUN echo "deb http://http.debian.net/debian/ buster main contrib non-free" > /et
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /build/veraPDF-rest/target/verapdf-rest-${VERAPDF_REST_VERSION}.jar /opt/verapdf-rest/
+COPY --from=builder /build/veraPDF-rest/target/verapdf-rest-${VERAPDF_REST_VERSION}.jar /opt/verapdf-rest/verapdf-rest.jar
 
 RUN wget -O /var/lib/clamav/main.cvd http://database.clamav.net/main.cvd && \
     wget -O /var/lib/clamav/daily.cvd http://database.clamav.net/daily.cvd && \
@@ -42,6 +42,8 @@ RUN sed -i 's/^Foreground .*$/Foreground true/g' /etc/clamav/clamd.conf && \
 RUN usermod -a -G clamav www-data
 
 COPY config/freshclam.conf /etc/clamav
+
+RUN groupadd -r verapdf-rest && useradd --no-log-init -r -g verapdf-rest verapdf-rest
 
 COPY config/additional-supervisord.conf /home/vcap/additional-supervisord.conf
 RUN cat /home/vcap/additional-supervisord.conf >> /etc/supervisord.conf
