@@ -45,6 +45,8 @@ COPY config/freshclam.conf /etc/clamav
 
 RUN groupadd -r verapdf-rest && useradd --no-log-init -r -g verapdf-rest verapdf-rest
 
+COPY config/verapdf-rest.yml /etc/verapdf-rest.yml
+
 COPY config/additional-supervisord.conf /home/vcap/additional-supervisord.conf
 RUN cat /home/vcap/additional-supervisord.conf >> /etc/supervisord.conf
 
