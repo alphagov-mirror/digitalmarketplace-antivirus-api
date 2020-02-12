@@ -36,3 +36,7 @@ RUN cat /home/vcap/additional-supervisord.conf >> /etc/supervisord.conf
 
 COPY config/additional-awslogs.conf /home/vcap/additional-awslogs.conf
 RUN cat /home/vcap/additional-awslogs.conf >> /etc/awslogs.conf
+
+COPY config/eicar.ndb.part-a /root/
+COPY config/eicar.ndb.part-b /root/
+RUN python -c 'a = open("/root/eicar.ndb.part-a", "rb"); b = open("/root/eicar.ndb.part-b", "rb"); c = open("/var/lib/clamav/eicar.ndb", "wb"); c.write(bytes(A^B for A, B in zip(a.read(), b.read()))); c.close()'
